@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: algoryqr-service
+  datasource:
+    url: jdbc:mysql://45.147.47.129:3306/algoryqrdb
+    username: root
+    password: algorycode1.
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
