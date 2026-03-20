@@ -6,17 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Map;
-
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @SuperBuilder
-public class QrRequest {
-    private String qrName;
+public class WifiRequest extends QrRequest{
 
-    private String typeName;
-
-    private Map<String, Object> details;
 
 }

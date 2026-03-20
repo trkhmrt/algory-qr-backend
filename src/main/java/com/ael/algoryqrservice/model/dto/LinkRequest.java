@@ -1,22 +1,14 @@
 package com.ael.algoryqrservice.model.dto;
 
+import com.ael.algoryqrservice.model.Qr;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Map;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @SuperBuilder
-public class QrRequest {
-    private String qrName;
-
-    private String typeName;
-
-    private Map<String, Object> details;
+public class LinkRequest extends QrRequest {
 
 }

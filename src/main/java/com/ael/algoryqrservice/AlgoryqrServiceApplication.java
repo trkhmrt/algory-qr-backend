@@ -8,6 +8,7 @@ public class AlgoryqrServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(AlgoryqrServiceApplication.class, args);
+
     }
 
 }

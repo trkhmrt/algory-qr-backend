@@ -1,18 +1,24 @@
 package com.ael.algoryqrservice.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import tools.jackson.databind.JsonNode;
 
 import java.util.List;
 
 @Entity
 @Table(name="tblQr")
 @Data
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 public class Qr extends QrBaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +26,15 @@ public class Qr extends QrBaseModel {
 
     private Long userId;
 
-    private String text;
+    private String qrName;
 
-    private Integer height;
+    @ManyToOne
+    @JoinColumn(name = "qr_type_id")
+    private QrType qrType;
 
-    private Integer width;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private JsonNode details;
 
-    @OneToMany(mappedBy="qr")
-    private List<QrDetail> qrDetails;
 
 }
