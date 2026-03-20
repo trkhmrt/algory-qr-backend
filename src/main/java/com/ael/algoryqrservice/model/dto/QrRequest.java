@@ -15,7 +15,7 @@ import java.util.Map;
 public class QrRequest {
     private String qrName;
 
-    private String typeName;
+    private String type;
 
     private Map<String, Object> details;
 

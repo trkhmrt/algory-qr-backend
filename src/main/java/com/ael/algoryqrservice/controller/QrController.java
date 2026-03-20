@@ -24,9 +24,6 @@ public class QrController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createQr(@RequestBody QrRequest req) throws IOException, WriterException {
-        //DTO (Data transfer object)
-        qrService.createQR(Type.WIFI,req);
-
-        return ResponseEntity.ok("Qr created");
+        return ResponseEntity.ok(qrService.createQR(req));
     }
 }

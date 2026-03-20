@@ -1,6 +1,13 @@
 package com.ael.algoryqrservice.model.dto;
 
 
-public class QrResponse {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
+@AllArgsConstructor
+public class QrResponse {
+    private String imgSrc;
 }

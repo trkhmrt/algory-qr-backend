@@ -9,7 +9,7 @@ public enum Type {
     MAIL(1,"mail"),
     LINK(2,"link"),
     LOCATION(3,"location"),
-    PHONE(4,"phone"),
+    CONTACT(4,"contact"),
     WIFI(5,"wifi"),
     TEXT(6,"text");
 

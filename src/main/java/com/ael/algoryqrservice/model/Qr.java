@@ -1,5 +1,6 @@
 package com.ael.algoryqrservice.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,9 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import tools.jackson.databind.JsonNode;
-
-import java.util.List;
 
 @Entity
 @Table(name="tblQr")
@@ -27,6 +25,10 @@ public class Qr extends QrBaseModel {
     private Long userId;
 
     private String qrName;
+
+    @Lob
+    @Column(columnDefinition = "text")
+    private String imgSrc;
 
     @ManyToOne
     @JoinColumn(name = "qr_type_id")

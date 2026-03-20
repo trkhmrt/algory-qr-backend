@@ -1,24 +1,30 @@
 package com.ael.algoryqrservice.provider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ael.algoryqrservice.model.Qr;
 import com.ael.algoryqrservice.model.Type;
 import com.ael.algoryqrservice.model.dto.QrRequest;
 import com.ael.algoryqrservice.model.dto.QrResponse;
-import com.ael.algoryqrservice.model.dto.WifiRequest;
+import com.ael.algoryqrservice.repository.QrRepository;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class WifiProvider implements QrProvider<QrRequest> {
+
+    private final QrRepository qrRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     public Type getType() {
@@ -32,46 +38,38 @@ public class WifiProvider implements QrProvider<QrRequest> {
 
     @Override
     public QrResponse createQr(QrRequest req) {
-    try{
-        String content = buildVCard(req.getDetails());
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter
-                .encode(content, BarcodeFormat.QR_CODE, 1, 2);
+        try {
+            String content = buildWifiContent(req.getDetails());
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            BitMatrix bitMatrix = qrCodeWriter
+                    .encode(content, BarcodeFormat.QR_CODE, 300, 300);
 
 
-        String projectPath = System.getProperty("user.dir");
-        Path dir = Paths.get(projectPath);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
 
-        String fileName = "qrcode.png";
-        Path filePath = dir.resolve(fileName);
+            String base64 = Base64.getEncoder().encodeToString(outputStream.toByteArray());
 
+            qrRepository.save(Qr.builder()
+                    .qrName(req.getQrName())
+                    .details(objectMapper.valueToTree(req.getDetails()))
+                    .imgSrc(base64)
+                    .build());
 
-        MatrixToImageWriter.writeToPath(bitMatrix,"PNG",filePath);
+            return QrResponse.builder().imgSrc(base64).build();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         return null;
-    }catch (Exception e){
-        System.out.println(e);
     }
 
-      return null;
-    }
+    public String buildWifiContent(Map<String, Object> details) {
+        String ssid = value(details.get("ssid"));
+        String password = value(details.get("password"));
+        String security = value(details.get("security"));
 
-    public String buildVCard(Map<String, Object> details) {
-        String firstName = value(details.get("firstName"));
-        String lastName = value(details.get("lastName"));
-        String phone = value(details.get("phone"));
-        String email = value(details.get("email"));
-        String company = value(details.get("company"));
-        String title = value(details.get("title"));
-
-        return "BEGIN:VCARD\n" +
-                "VERSION:3.0\n" +
-                "N:" + lastName + ";" + firstName + "\n" +
-                "FN:" + firstName + " " + lastName + "\n" +
-                "TEL:" + phone + "\n" +
-                "EMAIL:" + email + "\n" +
-                "ORG:" + company + "\n" +
-                "TITLE:" + title + "\n" +
-                "END:VCARD";
+        return "WIFI:T:" + security + ";S:" + ssid + ";P:" + password + ";;";
     }
 
     private String value(Object obj) {

@@ -28,8 +28,8 @@ public class QrService {
 
     private final QrProviderFactory qrProviderFactory;
 
-    public <T extends QrRequest> QrResponse createQR(Type qrType, T req) throws IOException, WriterException {
-
+    public <T extends QrRequest> QrResponse createQR(T req) throws IOException, WriterException {
+        Type qrType = Type.from(req.getType());
         QrProvider<T> provider = qrProviderFactory.get(qrType,(Class<T>) req.getClass());
         return provider.createQr(req);
 
@@ -53,6 +53,7 @@ public class QrService {
 //        }catch (Exception e){
 //            System.out.println(e);
 //        }
+
 
     }
 
